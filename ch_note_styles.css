@@ -1,0 +1,31 @@
+.ch_note_container {
+  height: auto;
+  width: 340px;
+
+  display: none;
+  position: fixed;
+  top: 0px;
+  z-index: 100000;
+}
+
+.ch_note_left {
+  left: 0px;
+}
+
+.ch_note_right {
+  right: 0px;
+}
+
+.ch_note_textarea {
+  height: auto;
+  width: inherit;
+
+  background-color: yellow !important;
+}
+
+.ch_note_topnav {
+  height: 40px;
+  width: inherit;
+
+  background-color: #333;
+}
