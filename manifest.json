@@ -23,7 +23,8 @@
     }
   ],
   "web_accessible_resources": [
-    "ch_note_styles.css"
+    "ch_note_styles.css",
+    "toggle.js"
   ],
   "background": {
     "scripts": ["background.js"],

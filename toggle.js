@@ -14,4 +14,6 @@ function toggleVis() {
   console.log(note.style.display);
 };
 
-toggleVis();
+module.exports = toggleVis();
+
+// toggleVis();

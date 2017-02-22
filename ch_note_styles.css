@@ -5,7 +5,7 @@
   display: none;
   position: fixed;
   top: 0px;
-  z-index: 100000;
+  z-index: 100000 !important;
 }
 
 .ch_note_left {
@@ -28,4 +28,8 @@
   width: inherit;
 
   background-color: #333;
+}
+
+.ch_note_topnav a {
+  
 }
