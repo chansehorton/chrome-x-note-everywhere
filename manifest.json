@@ -18,6 +18,7 @@
       "css": ["ch_note_styles.css"],
       "js": [
         "jquery-3.1.1.slim.min.js",
+        "toggle.js",
         "content.js"
       ]
     }

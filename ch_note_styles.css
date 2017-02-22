@@ -1,11 +1,13 @@
 .ch_note_container {
-  height: auto;
-  width: 340px;
+  height: 100%;
+  width: 340px !important;
 
+  box-sizing: content-box;
   display: none;
+  padding-bottom: 20px;
   position: fixed;
   top: 0px;
-  z-index: 100000 !important;
+  z-index: 100001 !important;
 }
 
 .ch_note_left {
@@ -17,19 +19,42 @@
 }
 
 .ch_note_textarea {
-  height: auto;
-  width: inherit;
+  height: 100%;
+  width: 322px !important;
 
-  background-color: yellow !important;
+  background-color: yellow;
+  box-sizing: content-box;
+  font: 14px system-ui;
+  overflow: scroll;
+  padding: 2px 8px !important;
+  resize: none;
 }
 
 .ch_note_topnav {
   height: 40px;
-  width: inherit;
+  width: 340px !important;
 
   background-color: #333;
+  box-sizing: content-box;
+  font: 14px system-ui;
 }
 
 .ch_note_topnav a {
-  
+  padding: 5px;
+}
+
+.ch_note_topnav a:link {
+  color: orange;
+}
+
+.ch_note_topnav a:visited {
+  color: orange;
+}
+
+.ch_note_topnav a:hover {
+  color: #42d7f4;
+}
+
+.ch_note_topnav a:active {
+  color orange;
 }

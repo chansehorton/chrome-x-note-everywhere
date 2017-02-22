@@ -1,27 +1,45 @@
 'use strict'
 
-let toggleVis = require('toggle');
-
 function addNote() {
-  let newDiv = document.createElement('div');
-  let topNav = document.createElement('div');
-  let note = document.createElement('textarea');
-  let ltRtToggle = document.createElement('a');
+  let newDiv = $('<div>', {id: 'ch_note_container'});
+  let topNav = $('<div>', {id: 'ch_note_topnav'});
+  let note = $('<textarea>', {id: 'ch_note_textarea'});
+  let ltRtToggle = $('<a>', {id: 'ch_note_ltrt_toggle'});
+  let hideLink = $('<a>', {id: 'ch_note_hide'});
 
-  newDiv.id = "ch_note_container";
-  newDiv.setAttribute("class", "ch_note_container ch_note_left");
+  // newDiv.id = "ch_note_container";
+  newDiv.addClass('ch_note_container ch_note_left');
+  topNav.addClass('ch_note_topnav');
+  note.addClass('ch_note_textarea');
 
-  topNav.setAttribute("class", "ch_note_topnav");
-  topNav.appendChild(ltRtToggle);
-  ltRtToggle.id = "ch_note_ltrt_toggle";
-  
+  note.attr('placeholder', 'Type your notes...');
 
-  note.setAttribute("class", "ch_note_textarea");
-  note.setAttribute("placeholder", "Type your note...");
+  hideLink.attr('href', '#').css('float', 'left').text('HIDE');
+  hideLink.on('click', function() {
+    $('#ch_note_container').hide();
+  });
 
-  newDiv.appendChild(topNav);
-  newDiv.appendChild(note);
-  document.body.appendChild(newDiv);
+  ltRtToggle.attr('href', '#').css('float', 'right').text('MOVE TO RIGHT');
+  ltRtToggle.on('click', function() {
+    let container = $("#ch_note_container");
+    let link = $("#ch_note_ltrt_toggle");
+
+    if (container.hasClass('ch_note_left')) {
+      console.log('toggle right');
+      container.removeClass('ch_note_left').addClass('ch_note_right');
+      link.text('MOVE TO LEFT');
+    } else {
+      console.log('toggle left');
+      container.removeClass('ch_note_right').addClass('ch_note_left');
+      link.text('MOVE TO RIGHT');
+    }
+  });
+
+  topNav.append(ltRtToggle);
+  topNav.append(hideLink);
+  newDiv.append(topNav);
+  newDiv.append(note);
+  $('body').append(newDiv);
 }
 
 addNote();
