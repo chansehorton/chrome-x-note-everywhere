@@ -15,17 +15,15 @@
         "http://*/*",
         "https://*/*"
         ],
-      "css": ["/css/ch_note_styles.css"],
+      "css": [
+        "/css/ch_note_styles.css"
+      ],
       "js": [
         "/js/jquery-3.1.1.slim.min.js",
         "/js/toggle.js",
         "/js/content.js"
       ]
     }
-  ],
-  "web_accessible_resources": [
-    "/css/ch_note_styles.css",
-    "/js/toggle.js"
   ],
   "background": {
     "scripts": ["/js/background.js"],
