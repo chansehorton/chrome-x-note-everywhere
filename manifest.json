@@ -6,7 +6,7 @@
   "version": "1.0",
 
   "browser_action": {
-    "default_icon": "Edit-50.png",
+    "default_icon": "/img/Edit-50.png",
     "default_title": "Show/Hide Note"
   },
   "content_scripts": [
@@ -15,20 +15,20 @@
         "http://*/*",
         "https://*/*"
         ],
-      "css": ["ch_note_styles.css"],
+      "css": ["/css/ch_note_styles.css"],
       "js": [
-        "jquery-3.1.1.slim.min.js",
-        "toggle.js",
-        "content.js"
+        "/js/jquery-3.1.1.slim.min.js",
+        "/js/toggle.js",
+        "/js/content.js"
       ]
     }
   ],
   "web_accessible_resources": [
-    "ch_note_styles.css",
-    "toggle.js"
+    "/css/ch_note_styles.css",
+    "/js/toggle.js"
   ],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["/js/background.js"],
     "persistent": false
   },
   "permissions": [
