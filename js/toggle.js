@@ -1,7 +1,5 @@
 'use strict'
 
-console.log('toggle script called');
-
 function toggleVis() {
   let note = $('#ch_note_container');
 
