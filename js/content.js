@@ -1,6 +1,10 @@
 'use strict'
 
-function addNote() {
+addNoteToPage();
+
+function addNoteToPage() {
+  let timeoutId;
+
   let newDiv = $('<div>', {id: 'ch_note_container'});
   let topNav = $('<div>', {id: 'ch_note_topnav'});
   let note = $('<textarea>', {id: 'ch_note_textarea'});
@@ -59,7 +63,32 @@ function addNote() {
     }
   });
 
+// append note to page, then retrieve any stored note from localStorage
   $('body').append(newDiv);
+  retrieveNote();
+
+// autosave note whenever user takes a break from typing
+  $("#ch_note_textarea").on('input propertychange change', () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout( () => {
+      saveNote();
+    }, 1000);
+  });
 }
 
-addNote();
+//saves note to localStorage
+function saveNote() {
+  console.log('note was saved');
+  let noteToSave = $("#ch_note_textarea").val();
+
+  localStorage.setItem('chSavedNote', JSON.stringify(noteToSave));
+}
+
+//retrieves previously saved note from localStorage
+function retrieveNote() {
+  console.log('retrieveNote ran')
+  let chSavedNote = localStorage.getItem('chSavedNote');
+  console.log(chSavedNote);
+
+  $("#ch_note_textarea").val(JSON.parse(chSavedNote));
+}
