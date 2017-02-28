@@ -56,6 +56,11 @@ function addNoteToPage() {
 
   speechLink.prop('title', 'Speak Your Note').css('order', '3').append(speakIcon);
 
+  speechLink.click( (e) => {
+    e.preventDefault();
+    startDictation();
+  });
+
   //configure position toggle link, add tooltip, add svg icon
   ltRtToggle.prop('title', 'Toggle Position').css('order', '4').append(rightToggleIcon);
 
@@ -105,3 +110,31 @@ function retrieveNote() {
 
   $("#ch_note_textarea").val(JSON.parse(chSavedNote));
 }
+
+function startDictation() {
+    if (window.hasOwnProperty('webkitSpeechRecognition')) {
+      let recognition = new webkitSpeechRecognition();
+
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
+      recognition.start();
+
+      recognition.onresult = (e) => {
+        let note = $('#ch_note_textarea');
+
+        if (note.val() === '') {
+          note.val(e.results[0][0].transcript);
+        } else {
+          note.val(note.val() + ' ' + e.results[0][0].transcript);  
+        }
+
+        recognition.stop();
+        $('#ch_note_textarea').trigger('change');
+      };
+
+      recognition.onerror = (e) => {
+        recognition.stop();
+      }
+    }
+  }
