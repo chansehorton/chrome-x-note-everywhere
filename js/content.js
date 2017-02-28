@@ -48,6 +48,12 @@ function addNoteToPage() {
 
   copyLink.prop('title', 'Copy to Clipboard').css('order', '2').append(copyIcon);
 
+  copyLink.click( (e) => {
+    e.preventDefault();
+    $('#ch_note_textarea').select();
+    document.execCommand('copy');
+  })
+
   speechLink.prop('title', 'Speak Your Note').css('order', '3').append(speakIcon);
 
   //configure position toggle link, add tooltip, add svg icon
@@ -90,14 +96,12 @@ function saveNote() {
   console.log('note was saved');
   let noteToSave = $("#ch_note_textarea").val();
 
-  localStorage.setItem('chSavedNote', JSON.stringify(noteToSave));
+  localStorage.setItem(`chSavedNote_${window.location.pathname}`, JSON.stringify(noteToSave));
 }
 
 //retrieves previously saved note from localStorage
 function retrieveNote() {
-  console.log('retrieveNote ran')
-  let chSavedNote = localStorage.getItem('chSavedNote');
-  console.log(chSavedNote);
+  let chSavedNote = localStorage.getItem(`chSavedNote_${window.location.pathname}`);
 
   $("#ch_note_textarea").val(JSON.parse(chSavedNote));
 }

@@ -1,10 +1,15 @@
+/*::-webkit-scrollbar {
+  display: none;
+}*/
+
 .ch_note_container {
-  height: 100%;
+  height: 95%;
   width: 340px !important;
 
   box-shadow: 0px 4px 20px 1px rgba(0,0,0,0.75);
   box-sizing: content-box;
   display: none;
+  overflow: hidden;
   padding-bottom: 20px;
   position: fixed;
   top: 0px;
@@ -21,12 +26,12 @@
 
 .ch_note_textarea {
   height: 100%;
-  width: 322px !important;
+  width: 340px !important;
 
   background-color: #f4f261;
   box-sizing: content-box;
   font: 14px system-ui !important;
-  overflow: scroll;
+  overflow-y: scroll;
   padding: 2px 8px !important;
   resize: none;
 }
