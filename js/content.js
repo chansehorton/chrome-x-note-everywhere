@@ -42,7 +42,8 @@ function addNoteToPage() {
   hideLink.prop('title', 'Hide Note').css('order', '1').append(hideIcon);
 
   //hideLink functionality
-  hideLink.click( () => {
+  hideLink.click( (e) => {
+    e.preventDefault();
     $('#ch_note_container').hide();
   });
 
@@ -65,11 +66,12 @@ function addNoteToPage() {
   ltRtToggle.prop('title', 'Toggle Position').css('order', '4').append(rightToggleIcon);
 
   //left/right toggle position functionality, and reorder icons
-  ltRtToggle.click( () => {
+  ltRtToggle.click( (e) => {
     let container = $('#ch_note_container');
     let togLink = $('#ch_note_ltrt_toggle');
     let hideLink = $('#ch_note_hide');
 
+    e.preventDefault();
     if (container.hasClass('ch_note_left')) {
       container.removeClass('ch_note_left').addClass('ch_note_right');
       togLink.children().remove();
@@ -126,7 +128,7 @@ function startDictation() {
         if (note.val() === '') {
           note.val(e.results[0][0].transcript);
         } else {
-          note.val(note.val() + ' ' + e.results[0][0].transcript);  
+          note.val(note.val() + ' ' + e.results[0][0].transcript);
         }
 
         recognition.stop();
