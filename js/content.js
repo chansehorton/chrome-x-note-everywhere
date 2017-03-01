@@ -105,14 +105,14 @@ function addNoteToPage() {
 function saveNote() {
   let noteToSave = $("#ne_note_textarea").val();
 
-  localStorage.setItem(`chSavedNote_${window.location.href}`, JSON.stringify(noteToSave));
+  localStorage.setItem(`neSavedNote_${window.location.hostname}+${window.location.pathname}`, JSON.stringify(noteToSave));
 }
 
 //retrieves previously saved note from localStorage
 function retrieveNote() {
-  let chSavedNote = localStorage.getItem(`chSavedNote_${window.location.href}`);
+  let neSavedNote = localStorage.getItem(`neSavedNote_${window.location.href}+${window.location.pathname}`);
 
-  $("#ne_note_textarea").val(JSON.parse(chSavedNote));
+  $("#ne_note_textarea").val(JSON.parse(neSavedNote));
 }
 
 function startDictation() {
