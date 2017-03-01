@@ -104,13 +104,14 @@ function addNoteToPage() {
 //saves note to localStorage
 function saveNote() {
   let noteToSave = $("#ne_note_textarea").val();
+  let noteUrl = `${window.location.hostname}${window.location.pathname}`;
 
-  localStorage.setItem(`neSavedNote_${window.location.hostname}+${window.location.pathname}`, JSON.stringify(noteToSave));
+  localStorage.setItem(`neSavedNote_${noteUrl}`, JSON.stringify(noteToSave));
 }
 
 //retrieves previously saved note from localStorage
 function retrieveNote() {
-  let neSavedNote = localStorage.getItem(`neSavedNote_${window.location.href}+${window.location.pathname}`);
+  let neSavedNote = localStorage.getItem(`neSavedNote_${window.location.hostname}${window.location.pathname}`);
 
   $("#ne_note_textarea").val(JSON.parse(neSavedNote));
 }
