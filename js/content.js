@@ -5,13 +5,22 @@ addNoteToPage();
 function addNoteToPage() {
   let timeoutId;
 
-  let newDiv = $('<div>', {id: 'ch_note_container'});
-  let topNav = $('<div>', {id: 'ch_note_topnav'});
-  let note = $('<textarea>', {id: 'ch_note_textarea'});
-  let ltRtToggle = $('<a>', {id: 'ch_note_ltrt_toggle'});
-  let hideLink = $('<a>', {id: 'ch_note_hide'});
-  let copyLink = $('<a>', {id: 'ch_note_copy'});
-  let speechLink = $('<a>', {id: 'ch_note_speech'});
+  let newDiv = $('<div>', {id: 'ne_note_container'});
+  let topNav = $('<div>', {id: 'ne_note_topnav'});
+  let note = $('<textarea>', {id: 'ne_note_textarea'});
+  let ltRtToggle = $('<a>', {id: 'ne_note_ltrt_toggle'});
+  let hideLink = $('<a>', {id: 'ne_note_hide'});
+  let copyLink = $('<a>', {id: 'ne_note_copy'});
+  let speechLink = $('<a>', {id: 'ne_note_speech'});
+
+  // green - #1ed760
+  // blue - #42d7f4
+  // svg draw paths for icons
+  const hideIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>';
+  const copyIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M7,8V6H5V19H19V6H17V8H7M9,4A3,3 0 0,1 12,1A3,3 0 0,1 15,4H19A2,2 0 0,1 21,6V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V6A2,2 0 0,1 5,4H9M12,3A1,1 0 0,0 11,4A1,1 0 0,0 12,5A1,1 0 0,0 13,4A1,1 0 0,0 12,3Z" /></svg>';
+  const speakIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" /></svg>';
+  const rightToggleIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" /></svg>';
+  const leftToggleIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>';
 
   topNav.append(ltRtToggle);
   topNav.append(copyLink);
@@ -25,18 +34,9 @@ function addNoteToPage() {
     $(element).attr('href', '#');
   });
 
-  newDiv.addClass('ch_note_container ch_note_left');
-  topNav.addClass('ch_note_topnav');
-  note.addClass('ch_note_textarea').attr('placeholder', 'Type your notes...');
-
-  // green - #1ed760
-  // blue - #42d7f4
-  // svg draw paths for icons
-  const hideIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>';
-  const copyIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M7,8V6H5V19H19V6H17V8H7M9,4A3,3 0 0,1 12,1A3,3 0 0,1 15,4H19A2,2 0 0,1 21,6V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V6A2,2 0 0,1 5,4H9M12,3A1,1 0 0,0 11,4A1,1 0 0,0 12,5A1,1 0 0,0 13,4A1,1 0 0,0 12,3Z" /></svg>';
-  const speakIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" /></svg>';
-  const rightToggleIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" /></svg>';
-  const leftToggleIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>';
+  newDiv.addClass('ne_note_container ne_note_left');
+  topNav.addClass('ne_note_topnav');
+  note.addClass('ne_note_textarea').attr('placeholder', 'Type your notes...');
 
   //configure hideLink, add tooltip, add svg icon
   hideLink.prop('title', 'Hide Note').css('order', '1').append(hideIcon);
@@ -44,14 +44,15 @@ function addNoteToPage() {
   //hideLink functionality
   hideLink.click( (e) => {
     e.preventDefault();
-    $('#ch_note_container').hide();
+    $('#ne_note_container').hide();
   });
 
   copyLink.prop('title', 'Copy to Clipboard').css('order', '2').append(copyIcon);
 
   copyLink.click( (e) => {
     e.preventDefault();
-    $('#ch_note_textarea').select();
+
+    $('#ne_note_textarea').select();
     document.execCommand('copy');
   })
 
@@ -59,6 +60,7 @@ function addNoteToPage() {
 
   speechLink.click( (e) => {
     e.preventDefault();
+
     startDictation();
   });
 
@@ -67,18 +69,19 @@ function addNoteToPage() {
 
   //left/right toggle position functionality, and reorder icons
   ltRtToggle.click( (e) => {
-    let container = $('#ch_note_container');
-    let togLink = $('#ch_note_ltrt_toggle');
-    let hideLink = $('#ch_note_hide');
-
     e.preventDefault();
-    if (container.hasClass('ch_note_left')) {
-      container.removeClass('ch_note_left').addClass('ch_note_right');
+
+    let container = $('#ne_note_container');
+    let togLink = $('#ne_note_ltrt_toggle');
+    let hideLink = $('#ne_note_hide');
+
+    if (container.hasClass('ne_note_left')) {
+      container.removeClass('ne_note_left').addClass('ne_note_right');
       togLink.children().remove();
       togLink.append(leftToggleIcon).css('order', '1');
       hideLink.css('order', '4');
     } else {
-      container.removeClass('ch_note_right').addClass('ch_note_left');
+      container.removeClass('ne_note_right').addClass('ne_note_left');
       togLink.children().remove();
       togLink.append(rightToggleIcon).css('order', '4');
       hideLink.css('order', '1');
@@ -90,7 +93,7 @@ function addNoteToPage() {
   retrieveNote();
 
 // autosave note whenever user takes a break from typing
-  $("#ch_note_textarea").on('input propertychange change', () => {
+  $("#ne_note_textarea").on('input propertychange change', () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout( () => {
       saveNote();
@@ -100,17 +103,16 @@ function addNoteToPage() {
 
 //saves note to localStorage
 function saveNote() {
-  console.log('note was saved');
-  let noteToSave = $("#ch_note_textarea").val();
+  let noteToSave = $("#ne_note_textarea").val();
 
-  localStorage.setItem(`chSavedNote_${window.location.pathname}`, JSON.stringify(noteToSave));
+  localStorage.setItem(`chSavedNote_${window.location.href}`, JSON.stringify(noteToSave));
 }
 
 //retrieves previously saved note from localStorage
 function retrieveNote() {
-  let chSavedNote = localStorage.getItem(`chSavedNote_${window.location.pathname}`);
+  let chSavedNote = localStorage.getItem(`chSavedNote_${window.location.href}`);
 
-  $("#ch_note_textarea").val(JSON.parse(chSavedNote));
+  $("#ne_note_textarea").val(JSON.parse(chSavedNote));
 }
 
 function startDictation() {
@@ -123,7 +125,7 @@ function startDictation() {
       recognition.start();
 
       recognition.onresult = (e) => {
-        let note = $('#ch_note_textarea');
+        let note = $('#ne_note_textarea');
 
         if (note.val() === '') {
           note.val(e.results[0][0].transcript);
@@ -132,7 +134,7 @@ function startDictation() {
         }
 
         recognition.stop();
-        $('#ch_note_textarea').trigger('change');
+        $('#ne_note_textarea').trigger('change');
       };
 
       recognition.onerror = (e) => {

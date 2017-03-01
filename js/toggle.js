@@ -1,7 +1,7 @@
 'use strict'
 
 function toggleVis() {
-  let note = $('#ch_note_container');
+  let note = $('#ne_note_container');
 
   if(note.css('display') === 'block') {
     note.hide();
