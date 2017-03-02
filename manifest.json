@@ -19,7 +19,7 @@
         "/css/ch_note_styles.css"
       ],
       "js": [
-        "/js/jquery-3.1.1.slim.min.js",
+        "/js/jquery-3.1.1.min.js",
         "/js/toggle.js",
         "/js/content.js"
       ]
@@ -32,6 +32,7 @@
   "permissions": [
     "activeTab",
     "http://*/*",
-    "https://*/*"
+    "https://*/*",
+    "https://notes-everywhere-db.herokuapp.com/*"
   ]
 }

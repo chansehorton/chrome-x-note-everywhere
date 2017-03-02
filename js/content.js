@@ -99,47 +99,126 @@ function addNoteToPage() {
       saveNote();
     }, 1000);
   });
+
+  window.onbeforeunload = function() {
+  localStorage.removeItem('neSavedNoteId');
+  return '';
+};
 }
 
 //saves note to localStorage
 function saveNote() {
+  console.log('attempting to save note');
   let noteToSave = $("#ne_note_textarea").val();
   let noteUrl = `${window.location.hostname}${window.location.pathname}`;
+  let position;
 
-  localStorage.setItem(`neSavedNote_${noteUrl}`, JSON.stringify(noteToSave));
+  if ($('ne_note_container').hasClass('ne_note_left')) {
+    position = 'left';
+  } else {
+    position= 'right';
+  }
+
+  //TODO: if user logged in
+  if (true) {
+    if (localStorage.getItem('neSavedNoteId')) {
+      //TODO: change to heroku db
+      const patchData = {
+        note: noteToSave,
+        note_position: position
+      };
+
+      console.log('patch data pre-send: ', patchData);
+
+      $.ajax({
+        type: 'PATCH',
+        url: `https://notes-everywhere-db.herokuapp.com/notes/${localStorage.getItem('neSavedNoteId')}`,
+        processData: false,
+        data: JSON.stringify({
+          "note": noteToSave,
+          "note_position": position,
+        }),
+        contentType: 'application/json',
+        dataType: 'json',
+      })
+      .done((data) => {
+        console.log('patch completed successfully ', data);
+        return;
+      })
+    } else {
+      const thisData = {
+        user_id: 3,
+        url: noteUrl,
+        note: noteToSave,
+        note_position: position
+      };
+      console.log('data to send');
+      console.log(thisData);
+
+      $.post('https://notes-everywhere-db.herokuapp.com/notes',thisData, function(data) {
+        console.log('posted successfully ', data);
+        return;
+      });
+    }
+  } else {
+    localStorage.setItem(`neSavedNote_${noteUrl}`, JSON.stringify(noteToSave));
+  }
 }
 
-//retrieves previously saved note from localStorage
+//retrieves previously saved note from localStorage or db
 function retrieveNote() {
-  let neSavedNote = localStorage.getItem(`neSavedNote_${window.location.hostname}${window.location.pathname}`);
+  console.log('attempting to retrieve note');
+  // TODO: if user logged in
+  if (true) {
+    // TODO: get user id
 
-  $("#ne_note_textarea").val(JSON.parse(neSavedNote));
+    // change dbUrl to use heroku db
+    const dbUrl = 'https://notes-everywhere-db.herokuapp.com/notes';
+    // TODO: make userId a variable in queryStr
+    const queryStr = `?userId=1&url=${window.location.hostname}${window.location.pathname}`;
+
+    $.get(`${dbUrl}${queryStr}`, function(data) {
+      if (!data) {
+        console.log('no notes found')
+        return;
+      } else {
+        console.log('found a note!');
+        localStorage.setItem('neSavedNoteId', data.id);
+        $("#ne_note_textarea").val(data.note);
+        return;
+      }
+    });
+  } else {
+    let neSavedNote = localStorage.getItem(`neSavedNote_${window.location.hostname}${window.location.pathname}`);
+
+    $("#ne_note_textarea").val(JSON.parse(neSavedNote));
+  }
 }
 
 function startDictation() {
-    if (window.hasOwnProperty('webkitSpeechRecognition')) {
-      let recognition = new webkitSpeechRecognition();
+  if (window.hasOwnProperty('webkitSpeechRecognition')) {
+    let recognition = new webkitSpeechRecognition();
 
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = "en-US";
-      recognition.start();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+    recognition.start();
 
-      recognition.onresult = (e) => {
-        let note = $('#ne_note_textarea');
+    recognition.onresult = (e) => {
+      let note = $('#ne_note_textarea');
 
-        if (note.val() === '') {
-          note.val(e.results[0][0].transcript);
-        } else {
-          note.val(note.val() + ' ' + e.results[0][0].transcript);
-        }
-
-        recognition.stop();
-        $('#ne_note_textarea').trigger('change');
-      };
-
-      recognition.onerror = (e) => {
-        recognition.stop();
+      if (note.val() === '') {
+        note.val(e.results[0][0].transcript);
+      } else {
+        note.val(note.val() + ' ' + e.results[0][0].transcript);
       }
+
+      recognition.stop();
+      $('#ne_note_textarea').trigger('change');
+    };
+
+    recognition.onerror = (e) => {
+      recognition.stop();
     }
   }
+}
