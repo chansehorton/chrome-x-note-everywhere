@@ -5,6 +5,7 @@ addNoteToPage();
 function addNoteToPage() {
   let timeoutId;
 
+//create and add the note div
   let newDiv = $('<div>', {id: 'ne_note_container'});
   let topNav = $('<div>', {id: 'ne_note_topnav'});
   let note = $('<textarea>', {id: 'ne_note_textarea'});
@@ -71,20 +72,12 @@ function addNoteToPage() {
   ltRtToggle.click( (e) => {
     e.preventDefault();
 
-    let container = $('#ne_note_container');
-    let togLink = $('#ne_note_ltrt_toggle');
-    let hideLink = $('#ne_note_hide');
+    const container = $('#ne_note_container');
 
     if (container.hasClass('ne_note_left')) {
-      container.removeClass('ne_note_left').addClass('ne_note_right');
-      togLink.children().remove();
-      togLink.append(leftToggleIcon).css('order', '1');
-      hideLink.css('order', '4');
+      toggleRight(leftToggleIcon);
     } else {
-      container.removeClass('ne_note_right').addClass('ne_note_left');
-      togLink.children().remove();
-      togLink.append(rightToggleIcon).css('order', '4');
-      hideLink.css('order', '1');
+      toggleLeft(rightToggleIcon);
     }
   });
 
@@ -100,10 +93,35 @@ function addNoteToPage() {
     }, 1000);
   });
 
+// delete saved note id, unecessary after note is saved to db
   window.onbeforeunload = function() {
-  localStorage.removeItem('neSavedNoteId');
-  return '';
-};
+    localStorage.removeItem('neSavedNoteId');
+    return '';
+  };
+}
+
+//toggle note to right
+function toggleRight(leftIcon) {
+  const container = $('#ne_note_container');
+  const togLink = $('#ne_note_ltrt_toggle');
+  const hideLink = $('#ne_note_hide');
+
+  container.removeClass('ne_note_left').addClass('ne_note_right');
+  togLink.children().remove();
+  togLink.append(leftIcon).css('order', '1');
+  hideLink.css('order', '4');
+}
+
+//toggle note to left
+function toggleLeft(rightToggle) {
+  const container = $('#ne_note_container');
+  const togLink = $('#ne_note_ltrt_toggle');
+  const hideLink = $('#ne_note_hide');
+
+  container.removeClass('ne_note_right').addClass('ne_note_left');
+  togLink.children().remove();
+  togLink.append(rightToggle).css('order', '4');
+  hideLink.css('order', '1');
 }
 
 //saves note to localStorage
@@ -155,7 +173,14 @@ function saveNote() {
       console.log('data to send');
       console.log(thisData);
 
-      $.post('https://notes-everywhere-db.herokuapp.com/notes',thisData, function(data) {
+      $.ajax({
+        type: 'POST',
+        url: 'https://notes-everywhere-db.herokuapp.com/notes',
+        processData: false,
+        data: JSON.stringify(thisData),
+        dataType: 'json',
+        contentType: 'application/json'
+      }).done((data) => {
         console.log('posted successfully ', data);
         return;
       });
@@ -175,7 +200,7 @@ function retrieveNote() {
     // change dbUrl to use heroku db
     const dbUrl = 'https://notes-everywhere-db.herokuapp.com/notes';
     // TODO: make userId a variable in queryStr
-    const queryStr = `?userId=1&url=${window.location.hostname}${window.location.pathname}`;
+    const queryStr = `?userId=3&url=${window.location.hostname}${window.location.pathname}`;
 
     $.get(`${dbUrl}${queryStr}`, function(data) {
       if (!data) {
@@ -185,6 +210,13 @@ function retrieveNote() {
         console.log('found a note!');
         localStorage.setItem('neSavedNoteId', data.id);
         $("#ne_note_textarea").val(data.note);
+
+        if (data.note_position === 'right') {
+          const leftToggleIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>';
+
+          toggleRight(leftToggleIcon);
+        }
+
         return;
       }
     });
