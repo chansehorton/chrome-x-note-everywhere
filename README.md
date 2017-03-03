@@ -6,8 +6,15 @@ A very simple note taking chrome extension that will give the user a note on eac
 ###Stretch Goals
 - speech to text
 - copy to clipboard
+- markdown conversion
 
 ###Technologies Used
+- Node
+- Express
+- jQuery
+- PostgreSQL
+- HTML5 Speech Recognition API
+- Google Chrome Extension Framework
 
 ###Wireframes
 - https://wireframe.cc/7HNHit
