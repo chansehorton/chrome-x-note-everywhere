@@ -16,12 +16,10 @@
         "https://*/*"
         ],
       "css": [
-        "/css/spectrum.css",
         "/css/ch_note_styles.css"
       ],
       "js": [
         "/js/jquery-3.1.1.js",
-        "/js/spectrum.js",
         "/js/content.js"
       ]
     }
