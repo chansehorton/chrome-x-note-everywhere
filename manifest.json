@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-
-  "name": "notes-everywhere",
-  "description": "Adds a notepad to every page you visit and saves any text you input so you can access them on return visits. Has speech to text and copy to clipboard functionality.",
-  "version": "1.0",
+  "name": "NotePages",
+  "description": "A simple notepad specific to each website you visit.",
+  "version": "1.0.0.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwgo/G08GwvBWm7e3Ht0odqp1n5PhzGTl+V769enlA4UNjGUyMrHY4+0sGiWWFJkwZ1tgQzG3wCYg87Grx/PlRUfhU55FhDvPvOipUJppWZEMhv//5HIRZ49Q2ndqZKoI6D7BsPDgMbpjOjNaaotn3k0O6kCmcweLJi309SOBm13pvziAcHsI09ftDIy7E4nCifuksT0l0pW5ek6zt4kCSwn5qZSALu4XwcYXDTa9R8LCLbB6rZOD3PFq0pnG+ylahrxRImCVqpl2vbrT06sqwUfYhCwxmaTUd2Jq/3pybo7WpnP9Y8WdO1DQaCRzTr9mS3wZkv96gKAcWtxuowX+tQIDAQAB",
 
   "browser_action": {
     "default_icon": "/img/Edit-50.png",
@@ -16,11 +16,12 @@
         "https://*/*"
         ],
       "css": [
+        "/css/spectrum.css",
         "/css/ch_note_styles.css"
       ],
       "js": [
-        "/js/jquery-3.1.1.min.js",
-        "/js/toggle.js",
+        "/js/jquery-3.1.1.js",
+        "/js/spectrum.js",
         "/js/content.js"
       ]
     }
@@ -31,8 +32,17 @@
   },
   "permissions": [
     "activeTab",
+    "tabs",
+    "storage",
+    "identity",
     "http://*/*",
     "https://*/*",
     "https://notes-everywhere-db.herokuapp.com/*"
-  ]
+  ],
+  "oauth2": {
+    "client_id": "316026697943-b09mq0tj7t7ro6e72tcvir530dkaq423.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/plus.login"
+    ]
+  }
 }
