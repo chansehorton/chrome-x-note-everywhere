@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener(request => {
 function toggleVis() {
   let note = $('#ne_note_container');
 
-  if(note.css('display') === 'block') {
+  if (note.css('display') === 'flex') {
     note.hide();
   }
   else {
