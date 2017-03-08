@@ -3,7 +3,7 @@
 }*/
 
 .ne_appearance {
-  height: 10%;
+  height: 50px;
 
   align-items: center;
   background-color: #333;
@@ -46,7 +46,7 @@
 }
 
 .ne_note_textarea {
-  height: 83%;
+  height: 85%;
   width: 330px !important;
 
   background-color: rgba(244,242,97,1);
