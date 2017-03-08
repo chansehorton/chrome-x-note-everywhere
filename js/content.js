@@ -6,7 +6,6 @@ chrome.runtime.onMessage.addListener(request => {
     return Promise.resolve({response: "Message received!: note toggled"});
   } else {
     addNoteToPage();
-    toggleVis();
     return Promise.resolve({response: "Message received!: note created"});
   }
 });
@@ -30,8 +29,7 @@ function addNoteToPage() {
   let newDiv = $('<div>', {id: 'ne_note_container'});
   let topNav = $('<div>', {id: 'ne_note_topnav'});
   let note = $('<textarea>', {id: 'ne_note_textarea'});
-  let noteDiv = $('<div>', {id: 'ne_note_div'});
-  let noteAppearDiv = $('<form class="ne_appearance"></form>');
+  let noteAppearDiv = $('<div class="ne_appearance"></div>');
   let noteOpacityLink = $('<a>', {id: 'ne_note_opacity_toggle'});
   let ltRtToggle = $('<a>', {id: 'ne_note_ltrt_toggle'});
   let hideLink = $('<a>', {id: 'ne_note_hide'});
@@ -56,16 +54,14 @@ function addNoteToPage() {
 
   newDiv.append(topNav);
   noteAppearDiv.append(noteOpacityLink);
-  noteDiv.append(note);
-  noteDiv.append(noteAppearDiv);
-  newDiv.append(noteDiv);
+  newDiv.append(note);
+  newDiv.append(noteAppearDiv);
 
   topNav.children().each( (index, element) => {
     $(element).attr('href', '#');
   });
 
   newDiv.addClass('ne_note_container ne_note_left');
-  noteDiv.addClass('ne_note_div');
   topNav.addClass('ne_note_topnav');
   note.addClass('ne_note_textarea').attr('placeholder', 'Type your notes...');
   noteOpacityLink.addClass('ne_note_opacity_toggle');

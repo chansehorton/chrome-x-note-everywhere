@@ -1,35 +1,15 @@
-/*::-webkit-scrollbar {
-  display: none;
-}*/
-
-.ne_appearance {
-  height: 50px;
-
-  align-items: center;
-  background-color: #333;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: -5px;
-}
-
-.ne_note_div {
-  height: 100%;
-  width: 100%;
-}
-
 .ne_note_container {
   height: 95%;
   width: 340px !important;
 
   box-shadow: 0px 4px 20px 1px rgba(0,0,0,0.75);
-  box-sizing: content-box;
-  display: none;
-  min-height: 300px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   overflow: hidden;
-  padding-bottom: 20px;
   position: fixed;
-  top: 0px;
+  top: 0;
   z-index: 2000000000 !important;
 }
 
@@ -41,40 +21,48 @@
   right: 0px;
 }
 
-.ne_note_opacity_toggle {
-  margin-right: 15px;
+.ne_note_topnav {
+  height: 60px;
+  width: 340px !important;
+
+  align-items: center;
+  background-color: #333;
+  box-shadow: 0px 4px 20px 0.5px rgba(0,0,0,0.25);
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 auto;
+  font: 14px system-ui;
+  justify-content: space-around;
 }
 
 .ne_note_textarea {
-  height: 85%;
+  height: 100%;
   width: 330px !important;
 
   background-color: rgba(244,242,97,1);
   box-sizing: content-box;
   color: #000;
+  flex: 3 1 auto;
   font: 14px system-ui !important;
-  min-height: 210px;
+  /*min-height: 210px;*/
   overflow-y: scroll;
   padding: 2px 8px !important;
   resize: none;
 }
 
-.ne_note_topnav {
-  height: 60px;
+.ne_appearance {
+  height: 50px;
   width: 340px !important;
 
+  align-items: center;
   background-color: #333;
   box-shadow: 0px 4px 20px 0.5px rgba(0,0,0,0.25);
   box-sizing: border-box;
   display: flex;
-  font: 14px system-ui;
-  justify-content: space-around;
+  flex: 1 1 auto;
+  justify-content: flex-end;
 }
 
-.ne_note_topnav a {
-  padding: 20px 5px;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  text-decoration: none;
+.ne_note_opacity_toggle {
+  margin-right: 15px;
 }
