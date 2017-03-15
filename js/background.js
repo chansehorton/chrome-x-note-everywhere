@@ -3,7 +3,7 @@
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
     chrome.tabs.sendMessage(tabs[0].id, { toggle: true }, function(response) {
-      console.log(response);
+      
     });
   });
 
@@ -14,7 +14,7 @@ getUserInfo(true);
 function getUserInfo (interactive) {
   const xmlhttp = new XMLHttpRequest();
   let retry = true;
-  let access_token;
+  let accessToken;
 
   getToken();
 
@@ -28,7 +28,7 @@ function getUserInfo (interactive) {
         return;
       }
       if (typeof token != 'undefined') {
-        access_token = token;
+        accessToken = token;
         sendRequest();
       }
 
@@ -50,9 +50,7 @@ function getUserInfo (interactive) {
       console.log( "Request completed. User Info: " + this.response );
       const userInfo = JSON.parse( this.response );
 
-      chrome.storage.local.set({"userId": userInfo.id.toString()}, () => {
-        
-      });
+      chrome.storage.local.set({"access_token": accessToken, "userId": userInfo.id.toString()}, () => {});
     }
   }
 }
