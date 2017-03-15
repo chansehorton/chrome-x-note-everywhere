@@ -71,12 +71,10 @@ function addNoteToPage() {
   noteOpacityLink.click( (e) => {
     e.preventDefault();
     if ($('#ne_opac_on').length) {
-      console.log('on was true, so toggle');
       $('#ne_note_textarea').css('background-color', 'rgba(244,242,97,1)');
       $('#ne_note_opacity_toggle').children().remove();
       $('#ne_note_opacity_toggle').append(opacityOffIcon);
     } else if ($('#ne_opac_off').length) {
-      console.log('off was true, so toggle');
       $('#ne_note_textarea').css('background-color', 'rgba(244,242,97,0.5)');
       $('#ne_note_opacity_toggle').children().remove();
       $('#ne_note_opacity_toggle').append(opacityOnIcon);
@@ -130,10 +128,12 @@ function addNoteToPage() {
 // append note to page, then retrieve any stored note from localStorage
   $('body').append(newDiv);
 
-  chrome.storage.local.get('userId', function(values) {
-    userId = values.userId;
+  chrome.storage.local.get(['userId', 'access_token'], function(values) {
+    let userId = values.userId;
+    let token = values.access_token;
+
     if (userId) {
-      retrieveNote(userId);
+      retrieveNote(userId, token);
     } else {
       retrieveNote();
     }
@@ -143,10 +143,12 @@ function addNoteToPage() {
   $("#ne_note_textarea").on('input propertychange change', () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout( () => {
-      chrome.storage.local.get('userId', function(values) {
-        userId = values.userId;
+      chrome.storage.local.get(['userId', 'access_token'], function(values) {
+        let userId = values.userId;
+        let token = values.access_token;
+
         if (userId) {
-          saveNote(userId);
+          saveNote(userId, token);
         } else {
           saveNote();
         }
@@ -181,7 +183,7 @@ function toggleLeft(rightToggle) {
 }
 
 //saves note to db or localStorage
-function saveNote(user) {
+function saveNote(user, token) {
   let noteToSave = $("#ne_note_textarea").val();
   let noteUrl = `${window.location.hostname}${window.location.pathname}`;
   let position;
@@ -193,7 +195,9 @@ function saveNote(user) {
   }
 
   if (user) {
+    //if user logged in, then attempt POST or PATCH
     if (localStorage.getItem('neSavedNoteId')) {
+      //if a note was retrieved on retrieve note call at page load, then PATCH
       const patchData = {
         note: noteToSave,
         note_position: position
@@ -203,6 +207,9 @@ function saveNote(user) {
         type: 'PATCH',
         url: `https://notes-everywhere-db.herokuapp.com/notes/${localStorage.getItem('neSavedNoteId')}`,
         processData: false,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
         data: JSON.stringify({
           "note": noteToSave,
           "note_position": position,
@@ -214,7 +221,15 @@ function saveNote(user) {
         console.log('note patched');
         return;
       })
+      .fail((err) => {
+        //if patch fails, save to localStorage and set save failed flag
+        console.log('error saving to db, saved to localStorage');
+        localStorage.setItem(`neSavedNote_${noteUrl}`, JSON.stringify(noteToSave));
+        localStorage.setItem(`ne_save_failed`, JSON.stringify(1));
+        return err;
+      })
     } else {
+      //if no note was retrieved on the retrieve note call at page load, then POST
       const thisData = {
         user_id: user,
         url: noteUrl,
@@ -226,6 +241,9 @@ function saveNote(user) {
         type: 'POST',
         url: 'https://notes-everywhere-db.herokuapp.com/notes',
         processData: false,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
         data: JSON.stringify(thisData),
         dataType: 'json',
         contentType: 'application/json'
@@ -233,37 +251,62 @@ function saveNote(user) {
         console.log('note posted')
         localStorage.setItem('neSavedNoteId', data.id);
         return;
+      }).fail((err) => {
+        //if post fails, save to localStorage, and set save failed flag
+        console.log('error saving to db, saved to localStorage');
+        localStorage.setItem(`neSavedNote_${noteUrl}`, JSON.stringify(noteToSave));
+        localStorage.setItem(`ne_save_failed`, JSON.stringify(1));
+        return err;
       });
     }
   } else {
-    console.log('note saved to ls');
+    //if no user logged in, save note to localStorage
+    console.log('note saved to localStorage');
     localStorage.setItem(`neSavedNote_${noteUrl}`, JSON.stringify(noteToSave));
   }
 }
 
 //retrieves previously saved note from localStorage or db
-function retrieveNote(user) {
+function retrieveNote(user, token) {
+  // if user is logged in
   if (user) {
     const dbUrl = 'https://notes-everywhere-db.herokuapp.com/notes';
     const queryStr = `?userId=${user}&url=${window.location.hostname}${window.location.pathname}`;
+    // if last save failed, there will be a flag and the note in localStorage
+    if (localStorage.getItem('ne_save_failed')) {
+      let neSavedNote = localStorage.getItem(`neSavedNote_${window.location.hostname}${window.location.pathname}`);
 
-    $.get(`${dbUrl}${queryStr}`, function(data) {
-      if (!data) {
-        console.log('no notes found');
-        return;
-      } else {
-        console.log('note found');
-        localStorage.setItem('neSavedNoteId', data.id);
-        $("#ne_note_textarea").val(data.note);
+      $("#ne_note_textarea").val(JSON.parse(neSavedNote));
+      localStorage.removeItem('ne_save_failed');
 
-        if (data.note_position === 'right') {
-          const leftToggleIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>';
+    } else {
+      // if no save failed flag, get note from db
+      $.ajax({
+        type: 'GET',
+        url: `${dbUrl}${queryStr}`,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        contentType: 'application/json'
+      }).done((data) => {
+        if (!data) {
+          console.log('no notes found');
+          return;
+        } else {
+          console.log('note found');
+          localStorage.setItem('neSavedNoteId', data.id);
+          $("#ne_note_textarea").val(data.note);
 
-          toggleRight(leftToggleIcon);
+          if (data.note_position === 'right') {
+            const leftToggleIcon = '<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#42d7f4" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>';
+
+            toggleRight(leftToggleIcon);
+          }
+          return;
         }
-        return;
-      }
-    });
+      });
+    }
+
   } else {
     let neSavedNote = localStorage.getItem(`neSavedNote_${window.location.hostname}${window.location.pathname}`);
 
