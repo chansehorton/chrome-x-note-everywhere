@@ -3,7 +3,7 @@
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
     chrome.tabs.sendMessage(tabs[0].id, { toggle: true }, function(response) {
-      
+
     });
   });
 
@@ -37,7 +37,7 @@ function getUserInfo (interactive) {
 
   function sendRequest() {
     xmlhttp.open('GET', 'https://www.googleapis.com/userinfo/v2/me' );
-    xmlhttp.setRequestHeader('Authorization','Bearer ' + access_token );
+    xmlhttp.setRequestHeader('Authorization','Bearer ' + accessToken );
     xmlhttp.onload = requestComplete;
     xmlhttp.send();
   }
