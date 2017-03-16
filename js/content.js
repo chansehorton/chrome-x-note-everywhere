@@ -273,7 +273,7 @@ function retrieveNote(user, token) {
   // if user is logged in
   if (user) {
     let dbUrl = 'https://notes-everywhere-db.herokuapp.com/notes';
-    let noteUrl = ${window.location.hostname}${window.location.pathname}
+    let noteUrl = `${window.location.hostname}${window.location.pathname}`;
     let queryStr = `?userId=${user}&url=${noteUrl}`;
     // if last save failed, there will be a flag and the note in localStorage
     if (localStorage.getItem(`ne_save_failed_${noteUrl}`)) {
