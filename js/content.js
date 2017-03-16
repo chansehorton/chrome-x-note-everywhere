@@ -199,21 +199,24 @@ function saveNote(user, token) {
     if (localStorage.getItem('neSavedNoteId')) {
       //if a note was retrieved on retrieve note call at page load, then PATCH
       const patchData = {
+        user_id: user,
+        url: noteUrl,
         note: noteToSave,
         note_position: position
       };
 
+      let dbUrl = 'https://notes-everywhere-db.herokuapp.com/notes';
+      let queryStr = `?userId=${user}&url=${window.location.hostname}${window.location.pathname}`;
+
       $.ajax({
         type: 'PATCH',
-        url: `https://notes-everywhere-db.herokuapp.com/notes/${localStorage.getItem('neSavedNoteId')}`,
+        // url: `https://notes-everywhere-db.herokuapp.com/notes/${localStorage.getItem('neSavedNoteId')}`,
+        url: `${dbUrl}`,
         processData: false,
         headers: {
           Authorization: `Bearer ${token}`
         },
-        data: JSON.stringify({
-          "note": noteToSave,
-          "note_position": position,
-        }),
+        data: JSON.stringify(patchData),
         contentType: 'application/json',
         dataType: 'json',
       })
@@ -249,7 +252,7 @@ function saveNote(user, token) {
         contentType: 'application/json'
       }).done((data) => {
         console.log('note posted')
-        localStorage.setItem('neSavedNoteId', data.id);
+        // localStorage.setItem('neSavedNoteId', data.id);
         return;
       }).fail((err) => {
         //if post fails, save to localStorage, and set save failed flag
@@ -270,8 +273,8 @@ function saveNote(user, token) {
 function retrieveNote(user, token) {
   // if user is logged in
   if (user) {
-    const dbUrl = 'https://notes-everywhere-db.herokuapp.com/notes';
-    const queryStr = `?userId=${user}&url=${window.location.hostname}${window.location.pathname}`;
+    let dbUrl = 'https://notes-everywhere-db.herokuapp.com/notes';
+    let queryStr = `?userId=${user}&url=${window.location.hostname}${window.location.pathname}`;
     // if last save failed, there will be a flag and the note in localStorage
     if (localStorage.getItem('ne_save_failed')) {
       let neSavedNote = localStorage.getItem(`neSavedNote_${window.location.hostname}${window.location.pathname}`);
