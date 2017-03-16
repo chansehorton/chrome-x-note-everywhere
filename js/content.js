@@ -210,7 +210,6 @@ function saveNote(user, token) {
 
       $.ajax({
         type: 'PATCH',
-        // url: `https://notes-everywhere-db.herokuapp.com/notes/${localStorage.getItem('neSavedNoteId')}`,
         url: `${dbUrl}`,
         processData: false,
         headers: {
@@ -228,7 +227,7 @@ function saveNote(user, token) {
         //if patch fails, save to localStorage and set save failed flag
         console.log('error saving to db, saved to localStorage');
         localStorage.setItem(`neSavedNote_${noteUrl}`, JSON.stringify(noteToSave));
-        localStorage.setItem(`ne_save_failed`, JSON.stringify(1));
+        localStorage.setItem(`ne_save_failed_${noteUrl}`, JSON.stringify(1));
         return err;
       })
     } else {
@@ -258,7 +257,7 @@ function saveNote(user, token) {
         //if post fails, save to localStorage, and set save failed flag
         console.log('error saving to db, saved to localStorage');
         localStorage.setItem(`neSavedNote_${noteUrl}`, JSON.stringify(noteToSave));
-        localStorage.setItem(`ne_save_failed`, JSON.stringify(1));
+        localStorage.setItem(`ne_save_failed_${noteUrl}`, JSON.stringify(1));
         return err;
       });
     }
@@ -274,13 +273,14 @@ function retrieveNote(user, token) {
   // if user is logged in
   if (user) {
     let dbUrl = 'https://notes-everywhere-db.herokuapp.com/notes';
-    let queryStr = `?userId=${user}&url=${window.location.hostname}${window.location.pathname}`;
+    let noteUrl = `${window.location.hostname}${window.location.pathname}`;
+    let queryStr = `?userId=${user}&url=${noteUrl}`;
     // if last save failed, there will be a flag and the note in localStorage
-    if (localStorage.getItem('ne_save_failed')) {
+    if (localStorage.getItem(`ne_save_failed_${noteUrl}`)) {
       let neSavedNote = localStorage.getItem(`neSavedNote_${window.location.hostname}${window.location.pathname}`);
 
       $("#ne_note_textarea").val(JSON.parse(neSavedNote));
-      localStorage.removeItem('ne_save_failed');
+      localStorage.removeItem(`ne_save_failed_${noteUrl}`);
 
     } else {
       // if no save failed flag, get note from db

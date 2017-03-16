@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Anchor Notes",
   "description": "A simple notepad specific to each website you visit.",
-  "version": "2.4.0",
+  "version": "2.4.2",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwgo/G08GwvBWm7e3Ht0odqp1n5PhzGTl+V769enlA4UNjGUyMrHY4+0sGiWWFJkwZ1tgQzG3wCYg87Grx/PlRUfhU55FhDvPvOipUJppWZEMhv//5HIRZ49Q2ndqZKoI6D7BsPDgMbpjOjNaaotn3k0O6kCmcweLJi309SOBm13pvziAcHsI09ftDIy7E4nCifuksT0l0pW5ek6zt4kCSwn5qZSALu4XwcYXDTa9R8LCLbB6rZOD3PFq0pnG+ylahrxRImCVqpl2vbrT06sqwUfYhCwxmaTUd2Jq/3pybo7WpnP9Y8WdO1DQaCRzTr9mS3wZkv96gKAcWtxuowX+tQIDAQAB",
   "icons": {
     "16": "/img/browser-icon_16x16.png",
