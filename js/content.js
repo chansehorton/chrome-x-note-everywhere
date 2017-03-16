@@ -186,6 +186,8 @@ function toggleLeft(rightToggle) {
 function saveNote(user, token) {
   let noteToSave = $("#ne_note_textarea").val();
   let noteUrl = `${window.location.hostname}${window.location.pathname}`;
+  let dbUrl = 'https://notes-everywhere-db.herokuapp.com/notes';
+  let queryStr = `?userId=${user}&url=${window.location.hostname}${window.location.pathname}`;
   let position;
 
   if ($('#ne_note_container').hasClass('ne_note_left')) {
@@ -194,20 +196,23 @@ function saveNote(user, token) {
     position= 'right';
   }
 
+  const patchData = {
+    user_id: user,
+    url: noteUrl,
+    note: noteToSave,
+    note_position: position
+  };
+
   if (user) {
-    //if user logged in, then attempt POST or PATCH
-    if (localStorage.getItem('neSavedNoteId')) {
-      //if a note was retrieved on retrieve note call at page load, then PATCH
-      const patchData = {
-        user_id: user,
-        url: noteUrl,
-        note: noteToSave,
-        note_position: position
-      };
-
-      let dbUrl = 'https://notes-everywhere-db.herokuapp.com/notes';
-      let queryStr = `?userId=${user}&url=${window.location.hostname}${window.location.pathname}`;
-
+    //if user logged in, then check db for a note with that user and url. if note exists, attempt PATCH, else attempt POST
+    $.ajax({
+      type: 'GET',
+      url: `${dbUrl}${queryStr}`,
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      contentType: 'application/json'
+    }).done((data) => {
       $.ajax({
         type: 'PATCH',
         url: `${dbUrl}`,
@@ -230,15 +235,8 @@ function saveNote(user, token) {
         localStorage.setItem(`ne_save_failed_${noteUrl}`, JSON.stringify(1));
         return err;
       })
-    } else {
-      //if no note was retrieved on the retrieve note call at page load, then POST
-      const thisData = {
-        user_id: user,
-        url: noteUrl,
-        note: noteToSave,
-        note_position: position
-      };
-
+    })
+    .fail((err) => {
       $.ajax({
         type: 'POST',
         url: 'https://notes-everywhere-db.herokuapp.com/notes',
@@ -246,12 +244,11 @@ function saveNote(user, token) {
         headers: {
           Authorization: `Bearer ${token}`
         },
-        data: JSON.stringify(thisData),
+        data: JSON.stringify(patchData),
         dataType: 'json',
         contentType: 'application/json'
       }).done((data) => {
         console.log('note posted')
-        // localStorage.setItem('neSavedNoteId', data.id);
         return;
       }).fail((err) => {
         //if post fails, save to localStorage, and set save failed flag
@@ -260,7 +257,8 @@ function saveNote(user, token) {
         localStorage.setItem(`ne_save_failed_${noteUrl}`, JSON.stringify(1));
         return err;
       });
-    }
+    })
+
   } else {
     //if no user logged in, save note to localStorage
     console.log('note saved to localStorage');
@@ -297,7 +295,7 @@ function retrieveNote(user, token) {
           return;
         } else {
           console.log('note found');
-          localStorage.setItem('neSavedNoteId', data.id);
+          // localStorage.setItem(`ne_note_exists_${noteUrl}`, 1);
           $("#ne_note_textarea").val(data.note);
 
           if (data.note_position === 'right') {
@@ -311,6 +309,7 @@ function retrieveNote(user, token) {
     }
 
   } else {
+    console.log('no user logged in');
     let neSavedNote = localStorage.getItem(`neSavedNote_${window.location.hostname}${window.location.pathname}`);
 
     $("#ne_note_textarea").val(JSON.parse(neSavedNote));
